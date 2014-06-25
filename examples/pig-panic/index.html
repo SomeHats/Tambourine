@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Pig Panic!</title>
+  <link rel="stylesheet" href="">
+  <script src="../../tambourine.js"></script>
+  <style>
+    #ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: lightgreen;
+    }
+
+    #game {
+      position: absolute;
+      width: 640px;
+      height: 480px;
+      background: lightskyblue;
+      overflow: hidden;
+    }
+
+    #player {
+      position: absolute;
+      bottom: 100px;
+      left: 50px;
+    }
+
+    #pig {
+      position: absolute;
+      bottom: 100px;
+      right: -100px;
+    }
+  </style>
+</head>
+<body>
+  <div id="description">
+    <h1>Pig Panic!</h1>
+    <p>
+      Oh no! Fashion conscious pigs have noticed Farmer Giles' terrible colour coordination and are out to get him! Use the space key to keep our little green and purple
+      hero safe from this stylish porcine menace. The fate of him and his little pink bow tie depend upon
+      it! Good luck. <button id="start">Start</button>
+    </p>
+  </div>
+  <div id="game">
+    <img src="http://i.imgur.com/yrRKWFO.png" alt="Bad taste farmer" id="player" height="100px">
+    <img src="http://i.imgur.com/xLJuZrB.png" alt="pig!" id="pig" width="100px">
+    <div id="ground"></div>
+  </div>
+
+  <script>
+    // start the game when the button is pressed
+    element('#start').onclick = startGame
+
+    // Use a # like in css to get elements by their id
+    player = element('#player')
+    pig = element('#pig')
+    ground = element('#ground')
+
+    allowJump = false
+
+    function loop() {
+      // If the space key is pressed and the player isn't too high, move them up in a jump
+      if (allowJump && spaceKeyPressed && player.position.bottom < 250) {
+        player.position.bottom = player.position.bottom + 10
+      } else {
+        // Otherwise, make the player fall down
+        allowJump = false
+        player.position.bottom = player.position.bottom - 7
+      }
+
+      // Make sure the player can't fall through the ground
+      if (player.position.bottom < 100) {
+        allowJump = true
+        player.position.bottom = 100
+      }
+
+      // Randomly make new pigs
+      if (random(1, 100) === 101) {
+        // Make a clone of the original pig
+        newPig = pig.clone()
+
+        // Put the new pig back to the starting position
+        newPig.reset()
+
+        // Make the pig move
+        newPig.loop = pigLoop
+      }
+    }
+
+    pigLoop = function() {
+      // Move the pig across the screen
+      this.position.right = this.position.right + 7
+
+      // If the pig touches the player, it's all over!
+      if (pig.touching(player)) {
+        alert('Game over!  You lose :(');
+      }
+
+      // Get rid of the pig when it goes off the other side
+      if (this.position.right > 640) {
+        this.destroy()
+      }
+    }
+  </script>
+</body>
+</html>
