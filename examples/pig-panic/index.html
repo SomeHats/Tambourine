@@ -30,7 +30,7 @@
       left: 50px;
     }
 
-    #pig {
+    .pig {
       position: absolute;
       bottom: 100px;
       right: -100px;
@@ -46,59 +46,90 @@
       it! Good luck. <button id="start">Start</button>
     </p>
   </div>
+
   <div id="game">
+    <div id="lives">
+      Lives: <span class="lives-count"></span>
+      Score: <span class="score-count"></span>
+    </div>
     <img src="http://i.imgur.com/yrRKWFO.png" alt="Bad taste farmer" id="player" height="100px">
-    <img src="http://i.imgur.com/xLJuZrB.png" alt="pig!" id="pig" width="100px">
+    <img src="http://i.imgur.com/xLJuZrB.png" alt="pig!" class="pig" width="75px">
     <div id="ground"></div>
   </div>
 
   <script>
     // start the game when the button is pressed
-    element('#start').onclick = startGame
+    element('#start').onclick = start
 
-    // Use a # like in css to get elements by their id
+    // Use a # like in css to get elements by their id, or a . for the class
     player = element('#player')
-    pig = element('#pig')
     ground = element('#ground')
+    pig = element('.pig')
+    livesDisplay = element('.lives-count')
+    scoreDisplay = element('.score-count')
 
     allowJump = false
 
+    lives = 3
+    livesDisplay.innerHTML = lives
+    score = 0
+
+    function start() {
+      addPig()
+      startGame()
+    }
+
     function loop() {
       // If the space key is pressed and the player isn't too high, move them up in a jump
-      if (allowJump && spaceKeyPressed && player.position.bottom < 250) {
-        player.position.bottom = player.position.bottom + 10
+      if (allowJump && spaceKeyPressed && player.position.bottom < 300) {
+        player.position.bottom = player.position.bottom + 15
       } else {
         // Otherwise, make the player fall down
         allowJump = false
-        player.position.bottom = player.position.bottom - 7
+        player.position.bottom = player.position.bottom - 10
       }
 
       // Make sure the player can't fall through the ground
       if (player.position.bottom < 100) {
-        allowJump = true
         player.position.bottom = 100
+        allowJump = true
       }
 
-      // Randomly make new pigs
-      if (random(1, 100) === 101) {
-        // Make a clone of the original pig
-        newPig = pig.clone()
-
-        // Put the new pig back to the starting position
-        newPig.reset()
-
-        // Make the pig move
-        newPig.loop = pigLoop
-      }
+      // Increase the score:
+      score = score + 1
+      // Show it on screen
+      scoreDisplay.innerHTML = score
     }
 
-    pigLoop = function() {
-      // Move the pig across the screen
-      this.position.right = this.position.right + 7
+    function addPig() {
+      // Make a clone of the original pig
+      newPig = pig.clone()
 
-      // If the pig touches the player, it's all over!
-      if (pig.touching(player)) {
-        alert('Game over!  You lose :(');
+      // Start the pig off the screen
+      newPig.position.right = -100
+
+      // Make the pig move
+      newPig.loop = pigLoop
+
+      // Delay, then generate the next pig:
+      setTimeout(addPig, random(500, 2000))
+    }
+
+    function pigLoop () {
+      // Move the pig across the screen
+      this.position.right = this.position.right + 8
+
+      // If the pig touches the player, lose a life and delete the pig
+      if (this.touching(player)) {
+        lives = lives - 1
+        livesDisplay.innerHTML = lives
+        this.destroy()
+
+        // No lives left? oh dear...
+        if (lives < 0) {
+          alert('Game over! You scored ' + score)
+          endGame()
+        }
       }
 
       // Get rid of the pig when it goes off the other side

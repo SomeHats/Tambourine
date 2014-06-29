@@ -29,21 +29,39 @@
   function extend(el) {
     tambourine.els.push(el);
 
-    console.log(window.getComputedStyle(el));
-
     var pos = {};
     ['top', 'bottom', 'left', 'right'].forEach(function (prop) {
       Object.defineProperty(pos, prop, {
         configurable: false,
         get: function () { return parseFloat(el.style[prop]) || 0; },
-        set: function (x) {
-          console.log('Set ' + prop + ' to ' + x);
-          el.style[prop] = x + 'px';
-        }
+        set: function (x) { el.style[prop] = x + 'px'; }
       });
     });
-
     el.position = pos;
+
+    el.clone = function() {
+      var newEl = el.cloneNode(true);
+      if (el.parentNode) el.parentNode.insertBefore(newEl, el);
+      return extend(newEl);
+    };
+
+    el.touching = function(other) {
+      var a = el.getBoundingClientRect(),
+        b = other.getBoundingClientRect();
+
+      return !(
+        b.left > a.right ||
+        b.top > a.bottom ||
+        b.bottom < a.top ||
+        b.right < a.left
+      );
+    };
+
+    el.destroy = function() {
+      el.loop = null;
+      tambourine.els = tambourine.els.filter(function(tEl) { return tEl !== el; });
+      if (el.parentNode) el.parentNode.removeChild(el);
+    }
 
     return el;
   }
@@ -68,12 +86,10 @@
     return name.toLowerCase() + 'KeyPressed';
   }
   window.addEventListener('keydown', function (e) {
-    console.log(_keyProp(e), true);
     window[_keyProp(e)] = true;
   });
 
   window.addEventListener('keyup', function (e) {
-    console.log(_keyProp(e), false);
     window[_keyProp(e)] = false;
   });
 
@@ -103,9 +119,16 @@
   }
 
   // startGame kicks off the main event loop
+  var started = false;
   function startGame() {
+    if (started) return;
+    started = true;
     _setupKeys();
     window.requestAnimationFrame(_eventLoop);
+  }
+
+  function endGame() {
+    window.cancelAnimationFrame(_eventLoop);
   }
 
   // Expose everything
