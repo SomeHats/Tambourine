@@ -58,40 +58,44 @@
   </div>
 
   <script>
-    // start the game when the button is pressed
-    element('#start').onclick = start
-
     // Use a # like in css to get elements by their id, or a . for the class
-    player = element('#player')
-    ground = element('#ground')
-    pig = element('.pig')
-    livesDisplay = element('.lives-count')
-    scoreDisplay = element('.score-count')
+    // First, we get all of the bits we need from the HTML to use in the rest of our code
+    var player = element('#player')
+    var ground = element('#ground')
+    var pig = element('.pig')
+    var livesDisplay = element('.lives-count')
+    var scoreDisplay = element('.score-count')
 
-    allowJump = false
+    // This variable says whether the player is allowed to jump or not
+    var allowJump = true
 
-    lives = 3
+    // Set  up the lives and the score
+    var lives = 3
+    var score = 0
+
+    // innerHTML is the contents of a HTML element. Here, we're making the html:
+    // <span class="lives-count"></span>
+    // from above, turn in to:
+    // <span class="lives-count">3</span>
     livesDisplay.innerHTML = lives
-    score = 0
 
-    function start() {
-      addPig()
-      startGame()
-    }
-
+    // Loop is the main game loop. It runs 60 times a second
     function loop() {
       // If the space key is pressed and the player isn't too high, move them up in a jump
       if (allowJump && spaceKeyPressed && player.position.bottom < 300) {
+        // Move the player up by 15 pixels
         player.position.bottom = player.position.bottom + 15
       } else {
         // Otherwise, make the player fall down
-        allowJump = false
         player.position.bottom = player.position.bottom - 10
+        // stop the player from jumping whilst falling
+        allowJump = false
       }
 
       // Make sure the player can't fall through the ground
       if (player.position.bottom < 100) {
         player.position.bottom = 100
+        // When the player is on the floor, they are allowed to jump
         allowJump = true
       }
 
@@ -99,20 +103,6 @@
       score = score + 1
       // Show it on screen
       scoreDisplay.innerHTML = score
-    }
-
-    function addPig() {
-      // Make a clone of the original pig
-      newPig = pig.clone()
-
-      // Start the pig off the screen
-      newPig.position.right = -100
-
-      // Make the pig move
-      newPig.loop = pigLoop
-
-      // Delay, then generate the next pig:
-      setTimeout(addPig, random(500, 2000))
     }
 
     function pigLoop () {
@@ -137,6 +127,28 @@
         this.destroy()
       }
     }
+
+    function addPig() {
+      // Make a clone of the original pig
+      newPig = pig.clone()
+
+      // Start the pig off the screen
+      newPig.position.right = -100
+
+      // Make the pig move
+      newPig.loop = pigLoop
+
+      // Delay, then generate the next pig:
+      setTimeout(addPig, random(500, 2000))
+    }
+
+    function start() {
+      addPig()
+      startGame()
+    }
+
+    // Ok, everything is ready. start the game when the button is pressed
+    element('#start').onclick = start
   </script>
 </body>
 </html>
