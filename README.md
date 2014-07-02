@@ -1,7 +1,7 @@
 Tambourine
 ==========
 
-[Documentation](#documentation) • [Tutorial](#tutorial)
+[Documentation](#documentation)
 
 Tambourine is a small library for making little games in the browser. It's made for people who are new to the whole programming thing, and want to try their hand at games.
 
@@ -37,7 +37,7 @@ if (score === 0) {
 ```
 --------------------
 #### element(selector)
-Select an element from your HTML, by its `id` or with a css selector. Adds extra Tambourine goodness.
+Get an element from your HTML, by its `id` or with a css selector. Adds extra Tambourine goodness.
 
 ##### Example
 HTML:
@@ -51,6 +51,24 @@ var blah = element('#blah')
 var bloop = element('.bloop')
 var huh = element('blah')
 // blah is the same as huh
+```
+--------------------
+#### elements(selector)
+Get all the elements on the page according to a CSS selector, and adds extra Tambourine goodness to them.
+
+##### Example
+HTML:
+```html
+<div id="blah"></div>
+<div class="bloop"></div>
+```
+Javascript:
+```javascript
+var blah = elements('div')
+blah.forEach(function(el) {
+    el.destroy()
+})
+// All the divs are gone!
 ```
 --------------------
 #### random(minimum, maximum)

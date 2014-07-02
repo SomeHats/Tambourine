@@ -6,8 +6,8 @@
   };
 
   // Get an element from the dom
-  function select(selector) {
-    // First, try selector as an id
+  function selectOne(selector) {
+    // First, try selector as a normal CSS selector
     var el = document.querySelector(selector);
 
     // If that doesn't work, try it as an id
@@ -22,6 +22,11 @@
     }
 
     return el;
+  }
+
+  function select(selector) {
+    // Try a CSS selector:
+    return Array.prototype.slice.apply(document.querySelectorAll(selector));
   }
 
   // Extend an element with all the useful tambourine goodness, adding it to the list of tracked
@@ -68,7 +73,11 @@
 
   // Get an element from the DOM and extend it with all the useful tambourine bits.
   function element(selector) {
-    return extend(select(selector));
+    return extend(selectOne(selector));
+  }
+
+  function elements(selector) {
+    return select(selector).map(extend)
   }
 
   // Key named key mappings:
@@ -132,9 +141,11 @@
   }
 
   // Expose everything
+  window.selectOne = selectOne;
   window.select = select;
   window.extend = extend;
   window.element = element;
+  window.elements = elements;
   window.startGame = startGame;
   window.random = random;
 }(window.document));
