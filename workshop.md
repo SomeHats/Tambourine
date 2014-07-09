@@ -38,83 +38,40 @@
 
 ![lunch!](http://i.imgur.com/sHsVoAf.gif)
 
-### Art and Design
-12:45 - 13:30
+### HTML and CSS
+12:45 - 13:00
 
-* We need some artwork for our game. In their teams, have some drawing characters, and others designing levels, interfaces, and interaction
-* In the last 15 minutes, go round and get the character designs photographed and uploaded to imgur.
-* This is probably not the final artwork - later on, show them some free tools for making better artwork
+* Our game is made up of three things:
+  - HTML for content
+  - CSS for design
+  - JS for behaviour/interaction
+* Make artwork for 'Pig Panic' - the farmer and the dodgy pig on make8bitart.com
+* Write basic HTML, so we have a static layout for our game ready.
 
-### Programming intro
-13:30 - 14:00
+### HTML and CSS: hands on
+13:00 - 13:45
 
-* Talk about:
-    - HTML for content
-    - CSS for design
-    - JS for interaction
-* Depending on the skill of the team, this bit might need more time. It's important to leave as much as possible to the actual game-building though
-* Very briefly walk through programming the start of 'Pig Panic'
-* In JSBin, add basic HTML for a simple game:
-```html
-<script src="http://tambourine.drumrollhq.com/tambourine.js"></script>
-<div id="game">
-  <div id="ground"></div>
-  <img src="http://i.imgur.com/yrRKWFO.png" id="player" height="100">
-</div>
-```
+* All make art assets and use HTML and CSS to start prototyping a game. Possibly fork from Pig Panic
 
-* Next, add the CSS:
-```css
-#game {
-  position: relative;
-  background-color: lightskyblue;
-  width: 640px;
-  height: 480px;
-}
+### JS Part 1:
+13:45 - 14:00
 
-#ground {
-  background-color: lightgreen;
-  position: absolute;
-  height: 100px;
-  width: 640px;
-  bottom: 0;
-}
+* Add JS for jumping in pig panic
+* Start with a very simple jumping model, then work up to one that works well
 
-#player {
-  position: absolute;
-  bottom: 150px;
-  left: 50px;
-}
-```
+### Programming: hands on
+14:00 - 14:45
 
-* Finally, the javascript
-```javascript
-var player = element('#player');
-var ground = element('#ground');
+* Implement the equivalent code from Pig Panic on their games
 
-var allowJump = true;
+### JS Part 2:
+14:45 - 15:00
 
-function loop() {
-  if (allowJump && spaceKeyPressed && player.position.bottom < 250) {
-    player.position.bottom += 10;
-  } else {
-    allowJump = false;
-    player.position.bottom -= 5;
-  }
-  
-  if (player.touching(ground)) {
-    allowJump = true;
-    player.position.bottom = 100;
-  }
-}
+* Add pigs and keep score in pig panic
 
-startGame();
-```
+### Programming: hands on
+15:00 - 16:30
 
-### Make Games!
-14:00 - 16:30
-
-* 2½ hours to build the game!
 * A fair bit of support will be needed - see http://tambourine.drumrollhq.com/ for Tambourine docs + tips & tricks
 * The teams will likely develop roles - some will be programming, some will be making artwork, etc.
 * Spare programmers can work on menus / a website for the game
